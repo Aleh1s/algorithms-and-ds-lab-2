@@ -6,19 +6,29 @@ public class Node {
     private final int level;
     private final int cost;
 
+    {
+        cost = 0;
+    }
+
     public Node(
             Node parent,
             Box3x3 box,
-            int level,
-            int cost
+            int level
     ) {
         this.parent = parent;
         this.box = box;
         this.level = level;
-        this.cost = cost;
     }
 
-    public static int getCost(Box3x3 curr, Box3x3 goal) {
+    public static void printPath(Node curr) {
+        if (curr == null)
+            return;
+        printPath(curr.parent);
+        curr.box.print();
+        System.out.println();
+    }
+
+    public static int calculateCost(Box3x3 curr, int[][] goal) {
         return curr.getNumOfDifferences(goal);
     }
 
@@ -26,8 +36,18 @@ public class Node {
         return parent;
     }
 
-    public Box3x3 getBox() {
-        return box;
+    public Box3x3 getSafeBox() {
+        try {
+            return (Box3x3) box.clone();
+        } catch (CloneNotSupportedException e) {
+            System.err.println("(Can not clone Box3x3)");
+            System.exit(-1);
+        }
+        return null;
+    }
+
+    public boolean isSolution(int[][] problem) {
+        return calculateCost(box, problem) == 0;
     }
 
     public int getLevel() {
