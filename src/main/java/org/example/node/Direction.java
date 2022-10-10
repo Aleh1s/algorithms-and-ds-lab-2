@@ -1,4 +1,4 @@
-package org.example;
+package org.example.node;
 
 public enum Direction {
     UP(0, -1),

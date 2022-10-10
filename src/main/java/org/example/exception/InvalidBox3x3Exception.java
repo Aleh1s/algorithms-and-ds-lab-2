@@ -1,4 +1,4 @@
-package org.example;
+package org.example.exception;
 
 public class InvalidBox3x3Exception extends Exception {
     public InvalidBox3x3Exception() {

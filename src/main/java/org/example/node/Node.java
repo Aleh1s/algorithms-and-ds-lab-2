@@ -1,4 +1,6 @@
-package org.example;
+package org.example.node;
+
+import java.util.Objects;
 
 public class Node {
     private final Node parent;
@@ -20,14 +22,6 @@ public class Node {
         this.level = level;
     }
 
-    public static void printPath(Node curr) {
-        if (curr == null)
-            return;
-        printPath(curr.parent);
-        curr.box.print();
-        System.out.println();
-    }
-
     public static int calculateCost(Box3x3 curr, int[][] goal) {
         return curr.getNumOfDifferences(goal);
     }
@@ -38,12 +32,16 @@ public class Node {
 
     public Box3x3 getSafeBox() {
         try {
-            return (Box3x3) box.clone();
+            return box.clone();
         } catch (CloneNotSupportedException e) {
             System.err.println("(Can not clone Box3x3)");
             System.exit(-1);
         }
         return null;
+    }
+
+    public Box3x3 getBox() {
+        return box;
     }
 
     public boolean isSolution(int[][] problem) {
@@ -56,5 +54,22 @@ public class Node {
 
     public int getCost() {
         return cost;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Node node)) return false;
+        return Objects.equals(box, node.box);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = parent != null ? parent.hashCode() : 0;
+        result = 31 * result + (box != null ? box.hashCode() : 0);
+        result = 31 * result + level;
+        result = 31 * result + cost;
+        return result;
     }
 }
