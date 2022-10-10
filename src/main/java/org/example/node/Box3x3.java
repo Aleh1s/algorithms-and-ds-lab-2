@@ -16,18 +16,15 @@ public class Box3x3 {
     private static final int COLS = 3;
     private final Tile[][] tiles;
     private final Tile emptyTile;
-
     public Box3x3(int[][] intTiles) throws InvalidBox3x3Exception {
         isValid(intTiles);
         tiles = wrap(intTiles);
         emptyTile = getEmptyTile(tiles);
     }
-
     public static void isValid(int[][] intTiles) throws InvalidBox3x3Exception {
         isSizeValid(intTiles);
         areNumsValid(intTiles);
     }
-
     private static void areNumsValid(int[][] intTiles) throws InvalidBox3x3Exception {
         List<Integer> validSequence = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8);
         List<Integer> currSequence = Stream.of(intTiles)
@@ -43,7 +40,6 @@ public class Box3x3 {
                     String.format(
                             "Box must contain a sequence of %s numbers, but actually %s", validSequence, currSequence));
     }
-
     private static void isSizeValid(int[][] intTiles) throws InvalidBox3x3Exception {
         int actualRows = intTiles.length;
         if (actualRows != ROWS)
@@ -54,12 +50,10 @@ public class Box3x3 {
                 throw new InvalidBox3x3Exception(
                         String.format("Invalid num of cols. Must be %d, but actually is %d.", COLS, intTile.length));
     }
-
     private Box3x3(Tile[][] tiles, Tile emptyTile) {
         this.tiles = tiles;
         this.emptyTile = emptyTile;
     }
-
     public Box3x3 clone() throws CloneNotSupportedException {
         Tile[][] tiles = new Tile[ROWS][COLS];
         for (int i = 0; i < ROWS; i++) {
@@ -73,7 +67,6 @@ public class Box3x3 {
             throw new CloneNotSupportedException();
         }
     }
-
     private static Tile[][] wrap(int[][] intTiles) {
         Tile[][] tiles = new Tile[ROWS][COLS];
         IntStream.range(0, ROWS).forEach(i -> {
@@ -83,7 +76,6 @@ public class Box3x3 {
         });
         return tiles;
     }
-
     private static Tile getEmptyTile(Tile[][] tiles) throws InvalidBox3x3Exception {
         return Stream.of(tiles)
                 .flatMap(Stream::of)
@@ -91,7 +83,6 @@ public class Box3x3 {
                 .findFirst()
                 .orElseThrow(() -> new InvalidBox3x3Exception("(Box3x3 has no empty tile)"));
     }
-
     public int getNumOfDifferences(int[][] goal) {
         IntCounter counter = new IntCounter();
         IntStream.range(0, ROWS).forEach(i -> {
