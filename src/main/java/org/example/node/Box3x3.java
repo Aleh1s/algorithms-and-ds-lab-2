@@ -1,5 +1,6 @@
 package org.example.node;
 
+import lombok.Getter;
 import org.example.utils.IntCounter;
 import org.example.exception.InvalidBox3x3Exception;
 import org.example.exception.OutOfBoxException;
@@ -11,6 +12,7 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@Getter
 public class Box3x3 {
     private static final int ROWS = 3;
     private static final int COLS = 3;
@@ -87,7 +89,7 @@ public class Box3x3 {
         IntCounter counter = new IntCounter();
         IntStream.range(0, ROWS).forEach(i -> {
             IntStream.range(0, COLS).forEach(j -> {
-                if (tiles[i][j].getValue() != goal[i][j])
+                if (tiles[i][j].getValue() != 0 && tiles[i][j].getValue() != goal[i][j])
                     counter.increment();
             });
         });

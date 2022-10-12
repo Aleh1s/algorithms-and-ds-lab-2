@@ -8,44 +8,53 @@ import org.example.exception.InvalidBox3x3Exception;
 import org.example.node.Node;
 import org.example.utils.Utils;
 
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        int[][] curr = {
-                {2, 1, 3},
-                {0, 4, 6},
-                {7, 8, 5}
-        };
-        int[][] problem = {
+        int[][] goal = {
                 {1, 2, 3},
                 {4, 5, 6},
                 {7, 8, 0}
         };
-
-//        try {
-//            Stack<Node> search = LimitDepthFirstSearch.search(curr, problem, 20);
-//            Utils.printResult(search);
-//        } catch (InvalidBox3x3Exception e) {
-//            throw new RuntimeException(e);
-//        } catch (CutoffException e) {
-//            throw new RuntimeException(e);
-//        } catch (FailureException e) {
-//            throw new RuntimeException(e);
-//        }
-
-        long executingTime = Utils.executingTime(() -> {
-            Stack<Node> search;
-            try {
-                search = RecursiveBestFirstSearch.search(curr, problem);
-            } catch (InvalidBox3x3Exception e) {
-                throw new RuntimeException(e);
-            } catch (FailureException e) {
-                throw new RuntimeException(e);
+        List<Integer> nums = new LinkedList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8));
+        Collections.shuffle(nums);
+        int[][] problem = new int[3][3];
+        int k = 0;
+        System.out.println("Initial state:");
+        for (int i = 0; i < problem.length; i++) {
+            for (int j = 0; j < problem[i].length; j++) {
+                problem[i][j] = nums.get(k++);
+                System.out.printf("%d ", problem[i][j]);
             }
-            Utils.printResult(search);
+            System.out.println();
+        }
+        long executingTime1 = Utils.executingTime(() -> {
+            System.out.println("LDFS result");
+            try {
+                Stack<Node> search = LimitDepthFirstSearch.search(problem, goal, 30);
+                Utils.printResult(search);
+            } catch (InvalidBox3x3Exception e) {
+                System.err.println("Invalid box exception");
+            } catch (CutoffException e) {
+                System.out.println(e.getMessage());
+            } catch (FailureException e) {
+                System.out.println("Failed");
+            }
         });
-        System.out.println("Time to execute - " + TimeUnit.NANOSECONDS.toMillis(executingTime));
+        System.out.printf("LDFS - %dms%n%n", TimeUnit.NANOSECONDS.toMillis(executingTime1));
+        long executingTime2 = Utils.executingTime(() -> {
+            System.out.println("RBFS result");
+            try {
+                Stack<Node> search = RecursiveBestFirstSearch.search(problem, goal);
+                Utils.printResult(search);
+            } catch (InvalidBox3x3Exception e) {
+                System.out.println("Invalid box exception");
+            } catch (FailureException e) {
+                System.out.println("Failed");
+            }
+        });
+        System.out.printf("RBFS - %dms%n", TimeUnit.NANOSECONDS.toMillis(executingTime2));
     }
 }

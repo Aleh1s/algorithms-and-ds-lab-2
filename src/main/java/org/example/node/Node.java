@@ -21,8 +21,21 @@ public class Node {
         this.box = box;
         this.level = level;
     }
-    public static int calculateCost(Box3x3 curr, int[][] goal) {
-        return curr.getNumOfDifferences(goal);
+
+    public Node(
+            Node parent,
+            Box3x3 box,
+            int level,
+            int cost
+    ) {
+        this.parent = parent;
+        this.box = box;
+        this.level = level;
+        this.cost = cost;
+    }
+
+    public static int calculateCost(Box3x3 curr, int[][] goal, int level) {
+        return curr.getNumOfDifferences(goal) + level;
     }
     public Box3x3 getSafeBox() {
         try {
@@ -34,7 +47,7 @@ public class Node {
         return null;
     }
     public boolean isSolution(int[][] problem) {
-        return calculateCost(box, problem) == 0;
+        return box.getNumOfDifferences(problem) == 0;
     }
     @Override
     public boolean equals(Object o) {
