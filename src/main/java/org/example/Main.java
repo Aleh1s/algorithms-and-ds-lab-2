@@ -8,7 +8,10 @@ import org.example.exception.InvalidBox3x3Exception;
 import org.example.node.Node;
 import org.example.utils.Utils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 public class Main {

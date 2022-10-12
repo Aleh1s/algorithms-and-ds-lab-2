@@ -1,14 +1,9 @@
 package org.example.utils;
 
-import org.example.node.Box3x3;
 import org.example.node.Node;
 import org.example.node.Tile;
 
 import java.util.Stack;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 public class Utils {

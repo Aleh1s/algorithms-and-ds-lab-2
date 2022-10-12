@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Stack;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class RecursiveBestFirstSearchTest {
 
@@ -32,6 +32,7 @@ class RecursiveBestFirstSearchTest {
         int[][] actual = Utils.from(box.getTiles());
         assertArrayEquals(expected, actual);
     }
+
     @Test
     @SneakyThrows
     void solutionIsReached2() {
@@ -46,6 +47,7 @@ class RecursiveBestFirstSearchTest {
         int[][] actual = Utils.from(box.getTiles());
         assertArrayEquals(expected, actual);
     }
+
     @Test
     @SneakyThrows
     void solutionIsReached3() {
@@ -60,6 +62,7 @@ class RecursiveBestFirstSearchTest {
         int[][] actual = Utils.from(box.getTiles());
         assertArrayEquals(expected, actual);
     }
+
     @Test
     @SneakyThrows
     void solutionIsReached4() {

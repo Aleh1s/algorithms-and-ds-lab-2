@@ -12,6 +12,7 @@ public class Node {
     private final Box3x3 box;
     private final int level;
     private int cost;
+
     public Node(
             Node parent,
             Box3x3 box,
@@ -37,6 +38,7 @@ public class Node {
     public static int calculateCost(Box3x3 curr, int[][] goal, int level) {
         return curr.getNumOfDifferences(goal) + level;
     }
+
     public Box3x3 getSafeBox() {
         try {
             return box.clone();
@@ -46,15 +48,18 @@ public class Node {
         }
         return null;
     }
+
     public boolean isSolution(int[][] problem) {
         return box.getNumOfDifferences(problem) == 0;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Node node)) return false;
         return Objects.equals(box, node.box);
     }
+
     @Override
     public int hashCode() {
         int result = parent != null ? parent.hashCode() : 0;

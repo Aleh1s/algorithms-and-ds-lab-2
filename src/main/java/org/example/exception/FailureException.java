@@ -2,16 +2,16 @@ package org.example.exception;
 
 public class FailureException extends Exception {
 
-    private int fLimit;
+    private int costLimit;
 
     public FailureException() {
     }
 
-    public FailureException(int fLimit) {
-        this.fLimit = fLimit;
+    public FailureException(int costLimit) {
+        this.costLimit = costLimit;
     }
 
-    public int getfLimit() {
-        return fLimit;
+    public int getCostLimit() {
+        return costLimit;
     }
 }
