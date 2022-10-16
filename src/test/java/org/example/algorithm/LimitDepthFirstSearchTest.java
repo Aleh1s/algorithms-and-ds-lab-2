@@ -2,18 +2,15 @@ package org.example.algorithm;
 
 import lombok.SneakyThrows;
 import org.example.node.Node;
-import org.example.utils.Statistic;
-import org.example.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Stack;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class LimitDepthFirstSearchTest {
