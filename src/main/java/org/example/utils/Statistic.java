@@ -31,9 +31,6 @@ public class Statistic {
         numberOfSavedStates--;
     }
 
-    public void solutionIsNotOptimal() {
-        foundAnOptimalSolution = false;
-    }
 
     public long getNumberOfIterations() {
         return numberOfIterations;
