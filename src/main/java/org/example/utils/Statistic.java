@@ -12,6 +12,9 @@ public class Statistic {
         foundAnOptimalSolution = true;
     }
 
+    public void increaseNumberOfStates(int number) {numberOfStates += number;}
+    public void increaseNumberOfSavedStates(int number) {numberOfSavedStates += number;}
+    public void reduceNumberOfSavedStates(int number) {numberOfSavedStates -= number;}
     public void incrementNumberOfIteration() {
         numberOfIterations++;
     }

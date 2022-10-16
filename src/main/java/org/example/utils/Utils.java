@@ -107,6 +107,12 @@ public class Utils {
         System.out.println("Number of times when solution is not optimal - " + Statistic.countNumberOfTimesWhenSolutionIsNotOptimal(statistics));
     }
 
+    public static void printStatistic(Statistic statistic) {
+        System.out.printf("Number of iterations - %d%n", statistic.getNumberOfIterations());
+        System.out.printf("Number of states - %d%n", statistic.getNumberOfStates());
+        System.out.printf("Number of saved states - %d%n", statistic.getNumberOfSavedStates());
+    }
+
     public static int[] from(int[][] state) {
         return Arrays.stream(state)
                 .flatMapToInt(IntStream::of)

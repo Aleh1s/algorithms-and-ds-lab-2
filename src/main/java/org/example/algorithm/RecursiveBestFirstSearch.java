@@ -1,5 +1,6 @@
 package org.example.algorithm;
 
+import lombok.Getter;
 import org.example.node.Node;
 import org.example.parser.Parser;
 import org.example.utils.Statistic;
@@ -16,9 +17,10 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.example.node.Indicator.*;
 import static org.example.utils.Utils.*;
 
+@Getter
 public class RecursiveBestFirstSearch {
 
-    private Statistic statistic;
+    private final Statistic statistic;
     private static final int[][] goal;
 
     static {
@@ -30,24 +32,26 @@ public class RecursiveBestFirstSearch {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 10; i++) {
-            RecursiveBestFirstSearch recursiveBestFirstSearch = new RecursiveBestFirstSearch();
-            int[][] problem = Utils.generateProblem();
-            long start = System.nanoTime();
-            recursiveBestFirstSearch.search(problem);
-            long finish = System.nanoTime();
-            System.out.println(NANOSECONDS.toMillis(finish - start));
-            System.out.println("~~~");
-        }
+        int[][] problem = Utils.generateProblem();
+        RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
+        long start = System.nanoTime();
+        rbfs.search(problem);
+        long finish = System.nanoTime();
+        System.out.println(NANOSECONDS.toMillis(finish - start));
+        Utils.printStatistic(rbfs.getStatistic());
+        System.out.println("~~~");
     }
 
     public Optional<Node> search(int[][] problem) {
         if (notSolvable(problem))
             return handleResult(Result.of(0, NOT_SOLVABLE, null));
         Point eptTile = getEmptyTileCoordinates(problem);
-        return handleResult(
-                recursiveSearch(
-                        new Node(problem, eptTile.x, eptTile.y, 0, null, null), Integer.MAX_VALUE, System.nanoTime()));
+        statistic.incrementNumberOfStates();
+        statistic.incrementNumberOfSavedStates();
+        Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), Integer.MAX_VALUE, System.nanoTime());
+        if (!result.hasSolution())
+            statistic.decrementNumberOfSavedStates();
+        return handleResult(result);
     }
 
     private Optional<Node> handleResult(Result result) {
@@ -63,6 +67,7 @@ public class RecursiveBestFirstSearch {
     }
 
     private Result recursiveSearch(Node node, int fLimit, long start) {
+        statistic.incrementNumberOfIteration();
         if (timeOut(start))
             return Result.of(Integer.MAX_VALUE, TERMINATED, null);
 
@@ -70,6 +75,8 @@ public class RecursiveBestFirstSearch {
             return Result.of(fLimit, SOLUTION, node);
 
         List<Node> successors = node.getSuccessors();
+        statistic.increaseNumberOfStates(successors.size());
+        statistic.increaseNumberOfSavedStates(successors.size());
 
         if (successors.isEmpty())
             return Result.of(Integer.MAX_VALUE, FAILURE, null);
@@ -81,16 +88,23 @@ public class RecursiveBestFirstSearch {
             successors.sort(Comparator.comparing(Node::getF));
 
             Node best = successors.get(0);
-            if (best.getF() > fLimit)
+            if (best.getF() > fLimit) {
+                statistic.reduceNumberOfSavedStates(successors.size());
                 return Result.of(best.getF(), FAILURE, null);
+            }
 
             Node alt = successors.get(1);
 
             Result result = recursiveSearch(best, min(alt.getF(), fLimit), start);
             best.setF(result.getFBest());
 
-            if (result.hasSolution() || result.isTerminated())
+            if (result.hasSolution())
                 return result;
+
+            if (result.isTerminated()) {
+                statistic.reduceNumberOfSavedStates(successors.size());
+                return result;
+            }
         }
     }
 }
