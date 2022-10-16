@@ -4,7 +4,6 @@ import org.example.node.Node;
 import org.example.parser.Parser;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -28,22 +27,22 @@ public class RecursiveBestFirstSearch {
     }
 
     public static Optional<Node> search(int[][] problem) {
-        int[][] goal = Parser.getGoalState();
         Point eptTile = getEmptyTileCoordinates(problem);
-        Node root = new Node(problem, eptTile.x, eptTile.y, 0,  null, null);
-        Result result = recursiveSearch(root, goal, Integer.MAX_VALUE);
-        if (result.isFailure()) {
+        return handleResult(recursiveSearch(
+                new Node(problem, eptTile.x, eptTile.y, 0,  null, null), Parser.getGoalState(), Integer.MAX_VALUE));
+    }
+
+    private static Optional<Node> handleResult(Result result) {
+        Optional<Node> solution = result.getSolution();
+        if (result.isFailure())
             System.err.println("Failure");
-            return Optional.empty();
-        } else {
-            Optional<Node> solution = result.getSolution();
+        else
             printSolution(solution.orElseThrow());
-            return solution;
-        }
+        return solution;
     }
 
     private static Result recursiveSearch(Node node, int[][] goal, int fLimit) {
-        if (Arrays.deepEquals(node.getState(), goal))
+        if (node.isSolution(goal))
             return Result.of(fLimit, false, node);
 
         List<Node> successors = node.getSuccessors();

@@ -4,7 +4,6 @@ import org.example.node.Node;
 import org.example.parser.Parser;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -26,26 +25,29 @@ public class LimitDepthFirstSearch {
     }
 
     public static Optional<Node> search(int[][] problem, int limit) {
-        int[][] goal = Parser.getGoalState();
         Point eptTile = getEmptyTileCoordinates(problem);
-        Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), goal, limit);
-        if (result.isCutoff()) {
-            System.err.println("There is no solution on this depth level");
-            return Optional.empty();
-        } else if (result.isFailure()) {
-            System.err.println("Failure");
-            return Optional.empty();
-        } else {
-            printSolution(result.getSolution().orElseThrow());
-            return result.getSolution();
-        }
+        return handleResult(
+                recursiveSearch(
+                        new Node(problem, eptTile.x, eptTile.y, 0, null, null), Parser.getGoalState(), limit));
     }
+
+    private static Optional<Node> handleResult(Result result) {
+        Optional<Node> solution = result.getSolution();
+        if (result.isCutoff())
+            System.err.println("There is no solution on this depth level");
+        else if (result.isFailure())
+            System.err.println("Failure");
+        else
+            printSolution(solution.orElseThrow());
+        return solution;
+    }
+
     private static Result recursiveSearch(Node node, int[][] goal, int limit) {
         boolean cutoffOccurred = false;
-        if (Arrays.deepEquals(node.getState(), goal))
+        if (node.isSolution(goal))
             return Result.of(false, false, node);
 
-        if (node.getDepth() >= limit)
+        if (node.depthIsReached(limit))
             return Result.of(false, true, null);
 
         for (Node successor : node.getSuccessors()) {

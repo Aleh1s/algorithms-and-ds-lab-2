@@ -3,6 +3,8 @@ package org.example.node;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,5 +55,13 @@ public class Node {
                 if (state[i][j] != 0 && state[i][j] != goal[i][j])
                     counter++;
         return counter;
+    }
+
+    public boolean isSolution(int[][] goal) {
+        return Arrays.deepEquals(state, goal);
+    }
+
+    public boolean depthIsReached(int limit) {
+        return depth >= limit;
     }
 }
