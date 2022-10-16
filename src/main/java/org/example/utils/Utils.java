@@ -81,14 +81,14 @@ public class Utils {
         }
         return problem;
     }
-    public static boolean isSolvable(int[][] state) {
+    public static boolean notSolvable(int[][] state) {
         int count = 0;
         int[] arr = from(state);
         for (int i = 0; i < 9; i++)
             for (int j = i + 1; j < 9; j++)
                 if (arr[i] != 0 && arr[j] != 0 && arr[i] > arr[j])
                     count++;
-        return count % 2 == 0;
+        return count % 2 != 0;
     }
     public static void printInitialState(int[][] initialState) {
         for (int i = 0; i < 3; i++) {

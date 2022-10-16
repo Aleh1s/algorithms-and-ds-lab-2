@@ -12,6 +12,12 @@ import static org.example.utils.Utils.*;
 
 public class LimitDepthFirstSearch {
 
+    private static final int[][] goal;
+
+    static {
+        goal = Parser.getGoalState();
+    }
+
     public static void main(String[] args) {
         int[][] problem = {
                 {2, 4, 3},
@@ -25,12 +31,12 @@ public class LimitDepthFirstSearch {
     }
 
     public static Optional<Node> search(int[][] problem, int limit) {
-        if (!isSolvable(problem))
+        if (notSolvable(problem))
             return handleResult(Result.of(NOT_SOLVABLE, null));
         Point eptTile = getEmptyTileCoordinates(problem);
         return handleResult(
                 recursiveSearch(
-                        new Node(problem, eptTile.x, eptTile.y, 0, null, null), Parser.getGoalState(), limit, System.nanoTime()));
+                        new Node(problem, eptTile.x, eptTile.y, 0, null, null), limit, System.nanoTime()));
     }
 
     private static Optional<Node> handleResult(Result result) {
@@ -46,7 +52,7 @@ public class LimitDepthFirstSearch {
         return solution;
     }
 
-    private static Result recursiveSearch(Node node, int[][] goal, int limit, long start) {
+    private static Result recursiveSearch(Node node, int limit, long start) {
         if (timeOut(start))
             return Result.of(TERMINATED, null);
 
@@ -58,7 +64,7 @@ public class LimitDepthFirstSearch {
             return Result.of(CUTOFF, null);
 
         for (Node successor : node.getSuccessors()) {
-            Result result = recursiveSearch(successor, goal, limit, start);
+            Result result = recursiveSearch(successor, limit, start);
 
             if (result.cutoff())
                 cutoffOccurred = true;

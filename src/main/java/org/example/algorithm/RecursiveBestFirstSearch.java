@@ -17,6 +17,12 @@ import static org.example.utils.Utils.*;
 
 public class RecursiveBestFirstSearch {
 
+    private static final int[][] goal;
+
+    static {
+        goal = Parser.getGoalState();
+    }
+
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
             int[][] problem = Utils.generateProblem();
@@ -29,11 +35,11 @@ public class RecursiveBestFirstSearch {
     }
 
     public static Optional<Node> search(int[][] problem) {
-        if (!isSolvable(problem))
+        if (notSolvable(problem))
             return handleResult(Result.of(0, NOT_SOLVABLE, null));
         Point eptTile = getEmptyTileCoordinates(problem);
         return handleResult(recursiveSearch(
-                new Node(problem, eptTile.x, eptTile.y, 0, null, null), Parser.getGoalState(), Integer.MAX_VALUE, System.nanoTime()));
+                new Node(problem, eptTile.x, eptTile.y, 0, null, null), Integer.MAX_VALUE, System.nanoTime()));
     }
 
     private static Optional<Node> handleResult(Result result) {
@@ -48,7 +54,7 @@ public class RecursiveBestFirstSearch {
         return solution;
     }
 
-    private static Result recursiveSearch(Node node, int[][] goal, int fLimit, long start) {
+    private static Result recursiveSearch(Node node, int fLimit, long start) {
         if (timeOut(start))
             return Result.of(Integer.MAX_VALUE, TERMINATED, null);
 
@@ -72,7 +78,7 @@ public class RecursiveBestFirstSearch {
 
             Node alt = successors.get(1);
 
-            Result result = recursiveSearch(best, goal, min(alt.getF(), fLimit), start);
+            Result result = recursiveSearch(best, min(alt.getF(), fLimit), start);
             best.setF(result.getFBest());
 
             if (result.hasSolution() || result.isTerminated())
