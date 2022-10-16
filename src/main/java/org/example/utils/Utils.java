@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
 
@@ -88,5 +90,21 @@ public class Utils {
         System.out.printf("Average number of states - %.2f%n", Statistic.countAverageNumberOfStates(statistics));
         System.out.printf("Average number of saved states - %.2f%n", Statistic.countAverageNumberOfSavedSates(statistics));
         System.out.println("Number of times when solution is not optimal - " + Statistic.countNumberOfTimesWhenSolutionIsNotOptimal(statistics));
+    }
+
+    public static boolean isSolvable(int[][] state) {
+        int count = 0;
+        int[] arr = from(state);
+        for (int i = 0; i < 9; i++)
+            for (int j = i + 1; j < 9; j++)
+                if (arr[i] != 0 && arr[j] != 0 && arr[i] > arr[j])
+                    count++;
+        return count % 2 == 0;
+    }
+
+    private static int[] from(int[][] state) {
+        return Arrays.stream(state)
+                .flatMapToInt(IntStream::of)
+                .toArray();
     }
 }
