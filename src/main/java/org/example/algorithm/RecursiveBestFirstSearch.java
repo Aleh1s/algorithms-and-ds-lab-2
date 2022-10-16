@@ -1,6 +1,7 @@
 package org.example.algorithm;
 
 import org.example.node.Node;
+import org.example.parser.Parser;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -14,27 +15,20 @@ import static org.example.utils.Utils.printSolution;
 
 public class RecursiveBestFirstSearch {
 
-
-
     public static void main(String[] args) {
         int[][] problem = {
                 {5, 6, 7},
                 {4, 0, 8},
                 {3, 2, 1}
         };
-        int[][] expected = {
-                {1, 2, 3},
-                {8, 0, 4},
-                {7, 6, 5}
-        };
-
         long start = System.nanoTime();
-        search(problem, expected);
+        search(problem);
         long finish = System.nanoTime();
         System.out.println(TimeUnit.NANOSECONDS.toMillis(finish - start));
     }
 
-    public static Optional<Node> search(int[][] problem, int[][] goal) {
+    public static Optional<Node> search(int[][] problem) {
+        int[][] goal = Parser.getGoalState();
         Point eptTile = getEmptyTileCoordinates(problem);
         Node root = new Node(problem, eptTile.x, eptTile.y, 0,  null, null);
         Result result = recursiveSearch(root, goal, Integer.MAX_VALUE);

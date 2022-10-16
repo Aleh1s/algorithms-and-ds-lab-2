@@ -1,6 +1,7 @@
 package org.example.algorithm;
 
 import org.example.node.Node;
+import org.example.parser.Parser;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -18,18 +19,14 @@ public class LimitDepthFirstSearch {
                 {1, 5, 0},
                 {7, 8, 6}
         };
-        int[][] expected = {
-                {1, 2, 3},
-                {4, 5, 6},
-                {7, 8, 0}
-        };
         long start = System.nanoTime();
-        search(problem, expected, 7);
+        search(problem, 7);
         long finish = System.nanoTime();
         System.out.println(TimeUnit.NANOSECONDS.toMillis(finish - start));
     }
 
-    public static Optional<Node> search(int[][] problem, int[][] goal, int limit) {
+    public static Optional<Node> search(int[][] problem, int limit) {
+        int[][] goal = Parser.getGoalState();
         Point eptTile = getEmptyTileCoordinates(problem);
         Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), goal, limit);
         if (result.isCutoff()) {
