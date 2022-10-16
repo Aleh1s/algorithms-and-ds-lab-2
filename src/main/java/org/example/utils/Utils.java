@@ -74,7 +74,15 @@ public class Utils {
         }
         return problem;
     }
-
+    public static boolean isSolvable(int[][] state) {
+        int count = 0;
+        int[] arr = from(state);
+        for (int i = 0; i < 9; i++)
+            for (int j = i + 1; j < 9; j++)
+                if (arr[i] != 0 && arr[j] != 0 && arr[i] > arr[j])
+                    count++;
+        return count % 2 == 0;
+    }
     public static void printInitialState(int[][] initialState) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -92,17 +100,7 @@ public class Utils {
         System.out.println("Number of times when solution is not optimal - " + Statistic.countNumberOfTimesWhenSolutionIsNotOptimal(statistics));
     }
 
-    public static boolean isSolvable(int[][] state) {
-        int count = 0;
-        int[] arr = from(state);
-        for (int i = 0; i < 9; i++)
-            for (int j = i + 1; j < 9; j++)
-                if (arr[i] != 0 && arr[j] != 0 && arr[i] > arr[j])
-                    count++;
-        return count % 2 == 0;
-    }
-
-    private static int[] from(int[][] state) {
+    public static int[] from(int[][] state) {
         return Arrays.stream(state)
                 .flatMapToInt(IntStream::of)
                 .toArray();

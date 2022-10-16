@@ -7,8 +7,7 @@ import java.awt.*;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static org.example.utils.Utils.getEmptyTileCoordinates;
-import static org.example.utils.Utils.printSolution;
+import static org.example.utils.Utils.*;
 
 public class LimitDepthFirstSearch {
 
@@ -25,6 +24,8 @@ public class LimitDepthFirstSearch {
     }
 
     public static Optional<Node> search(int[][] problem, int limit) {
+        if (!isSolvable(problem))
+            return handleResult(Result.of(true, false, null));
         Point eptTile = getEmptyTileCoordinates(problem);
         return handleResult(
                 recursiveSearch(
