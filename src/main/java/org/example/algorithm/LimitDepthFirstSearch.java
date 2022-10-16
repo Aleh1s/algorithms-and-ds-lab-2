@@ -24,13 +24,14 @@ public class LimitDepthFirstSearch {
                 {1, 5, 0},
                 {7, 8, 6}
         };
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
         long start = System.nanoTime();
-        search(problem, 7);
+        ldfs.search(problem, 7);
         long finish = System.nanoTime();
         System.out.println(TimeUnit.NANOSECONDS.toMillis(finish - start));
     }
 
-    public static Optional<Node> search(int[][] problem, int limit) {
+    public Optional<Node> search(int[][] problem, int limit) {
         if (notSolvable(problem))
             return handleResult(Result.of(NOT_SOLVABLE, null));
         Point eptTile = getEmptyTileCoordinates(problem);
@@ -39,7 +40,7 @@ public class LimitDepthFirstSearch {
                         new Node(problem, eptTile.x, eptTile.y, 0, null, null), limit, System.nanoTime()));
     }
 
-    private static Optional<Node> handleResult(Result result) {
+    private Optional<Node> handleResult(Result result) {
         Optional<Node> solution = result.getSolution();
         switch (result.getIndicator()) {
             case CUTOFF -> System.out.println("There is no solution on this depth level");
@@ -52,7 +53,7 @@ public class LimitDepthFirstSearch {
         return solution;
     }
 
-    private static Result recursiveSearch(Node node, int limit, long start) {
+    private Result recursiveSearch(Node node, int limit, long start) {
         if (timeOut(start))
             return Result.of(TERMINATED, null);
 

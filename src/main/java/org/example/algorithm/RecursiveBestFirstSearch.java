@@ -2,6 +2,7 @@ package org.example.algorithm;
 
 import org.example.node.Node;
 import org.example.parser.Parser;
+import org.example.utils.Statistic;
 import org.example.utils.Utils;
 
 import java.awt.*;
@@ -17,32 +18,39 @@ import static org.example.utils.Utils.*;
 
 public class RecursiveBestFirstSearch {
 
+    private Statistic statistic;
     private static final int[][] goal;
 
     static {
         goal = Parser.getGoalState();
     }
 
+    {
+        statistic = new Statistic();
+    }
+
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
+            RecursiveBestFirstSearch recursiveBestFirstSearch = new RecursiveBestFirstSearch();
             int[][] problem = Utils.generateProblem();
             long start = System.nanoTime();
-            search(problem);
+            recursiveBestFirstSearch.search(problem);
             long finish = System.nanoTime();
             System.out.println(NANOSECONDS.toMillis(finish - start));
             System.out.println("~~~");
         }
     }
 
-    public static Optional<Node> search(int[][] problem) {
+    public Optional<Node> search(int[][] problem) {
         if (notSolvable(problem))
             return handleResult(Result.of(0, NOT_SOLVABLE, null));
         Point eptTile = getEmptyTileCoordinates(problem);
-        return handleResult(recursiveSearch(
-                new Node(problem, eptTile.x, eptTile.y, 0, null, null), Integer.MAX_VALUE, System.nanoTime()));
+        return handleResult(
+                recursiveSearch(
+                        new Node(problem, eptTile.x, eptTile.y, 0, null, null), Integer.MAX_VALUE, System.nanoTime()));
     }
 
-    private static Optional<Node> handleResult(Result result) {
+    private Optional<Node> handleResult(Result result) {
         Optional<Node> solution = result.getSolution();
         switch (result.getIndicator()) {
             case FAILURE -> System.out.println("Failure");
@@ -54,7 +62,7 @@ public class RecursiveBestFirstSearch {
         return solution;
     }
 
-    private static Result recursiveSearch(Node node, int fLimit, long start) {
+    private Result recursiveSearch(Node node, int fLimit, long start) {
         if (timeOut(start))
             return Result.of(Integer.MAX_VALUE, TERMINATED, null);
 

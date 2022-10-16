@@ -29,7 +29,8 @@ class LimitDepthFirstSearchTest {
                 {0, 4, 6},
                 {7, 5, 8}
         };
-        Optional<Node> search = LimitDepthFirstSearch.search(problem, limit);
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        Optional<Node> search = ldfs.search(problem, limit);
         Node node = search.orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
@@ -42,7 +43,8 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        Optional<Node> search = LimitDepthFirstSearch.search(problem, limit);
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        Optional<Node> search = ldfs.search(problem, limit);
         Node node = search.orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
@@ -55,7 +57,8 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        Optional<Node> search = LimitDepthFirstSearch.search(problem, limit);
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        Optional<Node> search = ldfs.search(problem, limit);
         Node node = search.orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
@@ -68,7 +71,8 @@ class LimitDepthFirstSearchTest {
                 {1, 0, 6},
                 {7, 5, 8}
         };
-        Optional<Node> search = LimitDepthFirstSearch.search(problem, limit);
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        Optional<Node> search = ldfs.search(problem, limit);
         Node node = search.orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
@@ -82,7 +86,8 @@ class LimitDepthFirstSearchTest {
                 {1, 5, 0},
                 {7, 8, 6}
         };
-        Optional<Node> search = LimitDepthFirstSearch.search(problem, limit);
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        Optional<Node> search = ldfs.search(problem, limit);
         Node node = search.orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
@@ -95,7 +100,8 @@ class LimitDepthFirstSearchTest {
                 {0, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, limit).orElseThrow());
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        assertThrows(NoSuchElementException.class, () -> ldfs.search(problem, limit).orElseThrow());
     }
 
     @Test
@@ -106,7 +112,8 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, limit).orElseThrow());
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        assertThrows(NoSuchElementException.class, () -> ldfs.search(problem, limit).orElseThrow());
     }
 
     @Test
@@ -117,7 +124,8 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, limit).orElseThrow());
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        assertThrows(NoSuchElementException.class, () -> ldfs.search(problem, limit).orElseThrow());
     }
 
     @Test
@@ -128,7 +136,8 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, limit).orElseThrow());
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        assertThrows(NoSuchElementException.class, () -> ldfs.search(problem, limit).orElseThrow());
     }
 
     @Test
@@ -139,6 +148,7 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 0},
                 {7, 5, 8}
         };
-        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, limit).orElseThrow());
+        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+        assertThrows(NoSuchElementException.class, () -> ldfs.search(problem, limit).orElseThrow());
     }
 }
