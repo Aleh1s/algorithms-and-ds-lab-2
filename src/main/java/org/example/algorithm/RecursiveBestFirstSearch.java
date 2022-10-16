@@ -38,7 +38,7 @@ public class RecursiveBestFirstSearch {
         rbfs.search(problem);
         long finish = System.nanoTime();
         System.out.println(NANOSECONDS.toMillis(finish - start));
-        Utils.printStatistic(rbfs.getStatistic());
+        printStatistic(rbfs.getStatistic());
         System.out.println("~~~");
     }
 
