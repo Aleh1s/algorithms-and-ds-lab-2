@@ -3,9 +3,8 @@ package org.example.node;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.example.utils.Utils.*;
@@ -37,7 +36,7 @@ public class Node {
     }
 
     public List<Node> getSuccessors() {
-        List<Node> nextStates = new LinkedList<>();
+        List<Node> nextStates = new ArrayList<>(Direction.values().length);
         for (Direction dir : Direction.values()) {
             if (isSafe(dir, emptyX, emptyY)) {
                 int[][] state = cloneMatrix(getState());

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static org.example.utils.Utils.getEmptyTileCoordinates;
 import static org.example.utils.Utils.printSolution;
 
@@ -51,33 +53,22 @@ public class RecursiveBestFirstSearch {
             return Result.of(Integer.MAX_VALUE, true, null);
 
         for (Node successor : successors)
-            successor.setF(Math.max(successor.misplaced(goal) + successor.getDepth(), node.misplaced(goal) + node.getDepth()));
+            successor.setF(max(successor.misplaced(goal) + successor.getDepth(), node.misplaced(goal) + node.getDepth()));
 
         while (true) {
-            Node best = getBest(successors);
+            successors.sort(Comparator.comparing(Node::getF));
+
+            Node best = successors.get(0);
             if (best.getF() > fLimit)
                 return Result.of(best.getF(), true, null);
 
-            Optional<Node> alt = getAlternative(successors, best);
-            int altFLimit = alt.map(curr -> Math.min(fLimit, curr.getF()))
-                    .orElse(fLimit);
+            Node alt = successors.get(1);
 
-            Result result = recursiveSearch(best, goal, altFLimit);
+            Result result = recursiveSearch(best, goal, min(alt.getF(), fLimit));
             best.setF(result.getFBest());
 
             if (!result.isFailure())
                 return result;
         }
-    }
-    private static Optional<Node> getAlternative(List<Node> successors, Node best) {
-        return successors.stream()
-                .filter(successor -> !successor.equals(best))
-                .min(Comparator.comparing(Node::getF));
-    }
-
-    private static Node getBest(List<Node> successors) {
-        return successors.stream()
-                .min(Comparator.comparing(Node::getF))
-                .orElseThrow();
     }
 }
