@@ -5,6 +5,9 @@ import org.example.node.Node;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import static java.util.Objects.nonNull;
 
@@ -55,5 +58,35 @@ public class Utils {
                 if (state[i][j] == 0)
                     return new Point(j, i);
         throw new IllegalArgumentException("Has no empty tile!");
+    }
+
+    public static int[][] generateProblem() {
+        java.util.List<Integer> nums = new LinkedList<>(java.util.List.of(1, 2, 3, 4, 5, 6, 7, 8, 0));
+        Collections.shuffle(nums);
+        int[][] problem = new int[3][3];
+        int counter = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                problem[i][j] = nums.get(counter++);
+            }
+        }
+        return problem;
+    }
+
+    public static void printInitialState(int[][] initialState) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%d ", initialState[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void printStatistics(List<Statistic> statistics) {
+        System.out.println("The whole statistic: ");
+        System.out.printf("Average number of iteration - %.2f%n", Statistic.countAverageNumberOfIteration(statistics));
+        System.out.printf("Average number of states - %.2f%n", Statistic.countAverageNumberOfStates(statistics));
+        System.out.printf("Average number of saved states - %.2f%n", Statistic.countAverageNumberOfSavedSates(statistics));
+        System.out.println("Number of times when solution is not optimal - " + Statistic.countNumberOfTimesWhenSolutionIsNotOptimal(statistics));
     }
 }

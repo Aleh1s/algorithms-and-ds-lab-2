@@ -1,9 +1,5 @@
 package org.example.algorithm;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.example.node.Node;
 
 import java.awt.*;
@@ -13,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static lombok.AccessLevel.PRIVATE;
 import static org.example.utils.Utils.getEmptyTileCoordinates;
 import static org.example.utils.Utils.printSolution;
 

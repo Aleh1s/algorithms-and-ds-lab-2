@@ -1,7 +1,5 @@
 package org.example.algorithm;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.example.node.Node;
 
 import java.awt.*;
