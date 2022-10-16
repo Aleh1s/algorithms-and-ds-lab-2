@@ -1,63 +1,99 @@
 package org.example;
 
+import lombok.SneakyThrows;
 import org.example.algorithm.LimitDepthFirstSearch;
-import org.example.algorithm.RecursiveBestFirstSearch;
-import org.example.exception.CutoffException;
-import org.example.exception.FailureException;
-import org.example.exception.InvalidBox3x3Exception;
 import org.example.node.Node;
+import org.example.utils.Statistic;
 import org.example.utils.Utils;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
+    @SneakyThrows
     public static void main(String[] args) {
+        final int NUM_OF_EXPERIMENTS = 20;
         int[][] goal = {
                 {1, 2, 3},
                 {4, 5, 6},
                 {7, 8, 0}
         };
-        List<Integer> nums = new LinkedList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8));
+        int[][] problem = {
+                {2, 4, 3},
+                {1, 5, 0},
+                {7, 8, 6}
+        };
+        Statistic statistic = new Statistic();
+//        Stack<Node> search = LimitDepthFirstSearch.search(problem, goal,30, statistic);
+//        Utils.printResult(search);
+
+//        System.out.println("LDFS experiments: ");
+//        List<Statistic> LDFSStatistics = new LinkedList<>();
+//        for (int i = 0; i < NUM_OF_EXPERIMENTS; i++) {
+//            Statistic statistic = new Statistic();
+//            try {
+//                int[][] problem = generateProblem();
+//                System.out.printf("Experiment %d: %n", i + 1);
+//                System.out.println("State: ");
+//                printInitialState(problem);
+//                LimitDepthFirstSearch.search(problem, goal, 40, statistic);
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//            }
+//            LDFSStatistics.add(statistic);
+//            System.out.printf("Statistic - %s%n", statistic);
+//            System.out.println("~~~");
+//        }
+//        printStatistics(LDFSStatistics);
+//        System.out.println("RBFS experiments: ");
+//        List<Statistic> RBFSStatistics = new LinkedList<>();
+//        for (int i = 0; i < NUM_OF_EXPERIMENTS; i++) {
+//            Statistic statistic = new Statistic();
+//            try {
+//                int[][] problem = generateProblem();
+//                System.out.printf("Experiment %d: %n", i + 1);
+//                System.out.println("State: ");
+//                printInitialState(problem);
+//                RecursiveBestFirstSearch.search(problem, goal, statistic);
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//            }
+//            RBFSStatistics.add(statistic);
+//            System.out.printf("Statistic - %s%n", statistic);
+//            System.out.println("~~~");
+//        }
+//        printStatistics(RBFSStatistics);
+    }
+
+    private static int[][] generateProblem() {
+        List<Integer> nums = new LinkedList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 0));
         Collections.shuffle(nums);
         int[][] problem = new int[3][3];
-        int k = 0;
-        System.out.println("Initial state:");
-        for (int i = 0; i < problem.length; i++) {
-            for (int j = 0; j < problem[i].length; j++) {
-                problem[i][j] = nums.get(k++);
-                System.out.printf("%d ", problem[i][j]);
+        int counter = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                problem[i][j] = nums.get(counter++);
+            }
+        }
+        return problem;
+    }
+
+    private static void printInitialState(int[][] initialState) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%d ", initialState[i][j]);
             }
             System.out.println();
         }
-        long executingTime1 = Utils.executingTime(() -> {
-            System.out.println("LDFS result");
-            try {
-                Stack<Node> search = LimitDepthFirstSearch.search(problem, goal, 30);
-                Utils.printResult(search);
-            } catch (InvalidBox3x3Exception e) {
-                System.err.println("Invalid box exception");
-            } catch (CutoffException e) {
-                System.out.println(e.getMessage());
-            } catch (FailureException e) {
-                System.out.println("Failed");
-            }
-        });
-        System.out.printf("LDFS - %dms%n%n", TimeUnit.NANOSECONDS.toMillis(executingTime1));
-        long executingTime2 = Utils.executingTime(() -> {
-            System.out.println("RBFS result");
-            try {
-                Stack<Node> search = RecursiveBestFirstSearch.search(problem, goal);
-                Utils.printResult(search);
-            } catch (InvalidBox3x3Exception e) {
-                System.out.println("Invalid box exception");
-            } catch (FailureException e) {
-                System.out.println("Failed");
-            }
-        });
-        System.out.printf("RBFS - %dms%n", TimeUnit.NANOSECONDS.toMillis(executingTime2));
+    }
+
+    private static void printStatistics(List<Statistic> statistics) {
+        System.out.println("The whole statistic: ");
+        System.out.printf("Average number of iteration - %.2f%n", Statistic.countAverageNumberOfIteration(statistics));
+        System.out.printf("Average number of states - %.2f%n", Statistic.countAverageNumberOfStates(statistics));
+        System.out.printf("Average number of saved states - %.2f%n", Statistic.countAverageNumberOfSavedSates(statistics));
+        System.out.println("Number of times when solution is not optimal - " + Statistic.countNumberOfTimesWhenSolutionIsNotOptimal(statistics));
     }
 }

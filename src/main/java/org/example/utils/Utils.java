@@ -1,33 +1,59 @@
 package org.example.utils;
 
+import org.example.node.Direction;
 import org.example.node.Node;
-import org.example.node.Tile;
 
-import java.util.Stack;
-import java.util.stream.IntStream;
+import java.awt.*;
+import java.util.Arrays;
+
+import static java.util.Objects.nonNull;
 
 public class Utils {
-    public static void printResult(Stack<Node> queue) {
-        queue.stream()
-                .map(Node::getBox)
-                .forEach(box3x3 -> System.out.println(box3x3.toString()));
+    public static boolean isSafe(Direction dir, int x, int y) {
+        boolean xOutOfBound = x + dir.getX() < 0 || x + dir.getX() >= 3;
+        boolean yOutOfBound = y + dir.getY() < 0 || y + dir.getY() >= 3;
+        return !xOutOfBound && !yOutOfBound;
     }
 
-    public static long executingTime(Runnable action) {
-        long start = System.nanoTime();
-        action.run();
-        return System.nanoTime() - start;
+    public static void swap(int[][] state, int x, int y, int eptX, int eptY) {
+        int temp = state[y][x];
+        state[y][x] = state[eptY][eptX];
+        state[eptY][eptX] = temp;
     }
 
-    public static int[][] from(Tile[][] tiles) {
-        int[][] result = new int[tiles.length][];
-        IntStream.range(0, tiles.length).forEach(i -> {
-            int[] arr = new int[tiles[i].length];
-            IntStream.range(0, tiles[i].length).forEach(j -> {
-                arr[j] = tiles[i][j].getValue();
-            });
-            result[i] = arr;
-        });
-        return result;
+    public static int[][] cloneMatrix(int[][] cloneable) {
+        return Arrays.stream(cloneable)
+                .map(int[]::clone)
+                .toArray(int[][]::new);
+    }
+
+    public static void printSolution(Node solution) {
+        if (solution == null)
+            return;
+
+        printSolution(solution.getParent());
+        printState(solution);
+        System.out.println();
+    }
+
+    public static void printState(Node node) {
+        String dir = nonNull(node.getDir()) ? node.getDir().name() : "INITIAL";
+        System.out.printf("%s%n", dir);
+        int[][] state = node.getState();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%d ", state[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.printf("Depth - %d%n", node.getDepth());
+    }
+
+    public static Point getEmptyTileCoordinates(int[][] state) {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (state[i][j] == 0)
+                    return new Point(j, i);
+        throw new IllegalArgumentException("Has no empty tile!");
     }
 }

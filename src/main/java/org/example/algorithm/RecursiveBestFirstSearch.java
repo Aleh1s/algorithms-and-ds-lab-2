@@ -1,87 +1,105 @@
 package org.example.algorithm;
 
-import org.example.exception.FailureException;
-import org.example.exception.InvalidBox3x3Exception;
-import org.example.exception.OutOfBoxException;
-import org.example.node.Box3x3;
-import org.example.node.Direction;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.node.Node;
 
-import java.util.*;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
-import static java.util.Objects.nonNull;
+import static lombok.AccessLevel.PRIVATE;
+import static org.example.utils.Utils.getEmptyTileCoordinates;
+import static org.example.utils.Utils.printSolution;
 
 public class RecursiveBestFirstSearch {
 
-    public static Stack<Node> search(int[][] problem, int[][] goal) throws InvalidBox3x3Exception, FailureException {
-        Stack<Node> result = new Stack<>();
-        Box3x3.isValid(goal);
-        Box3x3 box3x3 = new Box3x3(problem);
-        int level = 0,
-            cost = Node.calculateCost(box3x3, goal, level);
-        Node root = new Node(null, box3x3, level, cost);
-        recursiveSearch(goal, root, Integer.MAX_VALUE, result);
-        return result;
+
+
+    public static void main(String[] args) {
+        int[][] problem = {
+                {5, 6, 7},
+                {4, 0, 8},
+                {3, 2, 1}
+        };
+        int[][] expected = {
+                {1, 2, 3},
+                {8, 0, 4},
+                {7, 6, 5}
+        };
+//        int[][] problem = {
+//                {2, 4, 3},
+//                {1, 5, 0},
+//                {7, 8, 6}
+//        };
+//        int[][] expected = {
+//                {1, 2, 3},
+//                {4, 5, 6},
+//                {7, 8, 0}
+//        };
+
+        long start = System.nanoTime();
+        search(problem, expected);
+        long finish = System.nanoTime();
+        System.out.println(TimeUnit.NANOSECONDS.toMillis(finish - start));
     }
 
-    private static void recursiveSearch(int[][] goal, Node node, int costLimit, Stack<Node> result) throws FailureException {
-        result.add(node);
-        if (node.isSolution(goal)) return;
-        List<Node> successors = getSuccessors(node, goal);
+    public static Optional<Node> search(int[][] problem, int[][] goal) {
+        Point eptTile = getEmptyTileCoordinates(problem);
+        Node root = new Node(problem, eptTile.x, eptTile.y, 0,  null, null);
+        Result result = recursiveSearch(root, goal, Integer.MAX_VALUE);
+        if (result.isFailure()) {
+            System.err.println("Failure");
+            return Optional.empty();
+        } else {
+            Optional<Node> solution = result.getSolution();
+            printSolution(solution.orElseThrow());
+            return solution;
+        }
+    }
+
+    private static Result recursiveSearch(Node node, int[][] goal, int fLimit) {
+        if (Arrays.deepEquals(node.getState(), goal))
+            return Result.of(fLimit, false, node);
+
+        List<Node> successors = node.getSuccessors();
+
         if (successors.isEmpty())
-            throw new FailureException(Integer.MAX_VALUE);
+            return Result.of(Integer.MAX_VALUE, true, null);
+
+        for (Node successor : successors)
+            successor.setF(Math.max(successor.misplaced(goal) + successor.getDepth(), node.misplaced(goal) + node.getDepth()));
+
         while (true) {
-            Node best = findBest(successors);
-            if (best.getCost() > costLimit)
-                throw new FailureException(best.getCost());
-            Optional<Node> alternative = findAlternative(successors, best);
-            int limit = alternative
-                    .map(alt -> Math.min(costLimit, alt.getCost()))
-                    .orElse(costLimit);
-            try {
-                recursiveSearch(goal, best, limit, result);
-                return;
-            } catch (FailureException e) {
-                best.setCost(e.getCostLimit());
-                result.pop();
-            }
+            Node best = getBest(successors);
+            if (best.getF() > fLimit)
+                return Result.of(best.getF(), true, null);
+
+            Optional<Node> alt = getAlternative(successors, best);
+            int altFLimit = alt.map(curr -> Math.min(fLimit, curr.getF()))
+                    .orElse(fLimit);
+
+            Result result = recursiveSearch(best, goal, altFLimit);
+            best.setF(result.getFBest());
+
+            if (!result.isFailure())
+                return result;
         }
     }
-
-    private static List<Node> getSuccessors(Node node, int[][] goal) {
-        List<Node> successors = new LinkedList<>();
-        for (Direction dir : Direction.values()) {
-            Box3x3 state = node.getSafeBox();
-            boolean isSafeOperation = true;
-            try {
-                state.moveEmptyTile(dir);
-            } catch (OutOfBoxException e) {
-                isSafeOperation = false;
-            }
-            if (isSafeOperation) {
-                boolean isSameAsParent = false;
-                if (nonNull(node.getParent()))
-                    isSameAsParent = state.equals(node.getParent().getBox());
-                if (!isSameAsParent) {
-                    int level = node.getLevel() + 1,
-                            cost = Node.calculateCost(state, goal, level);
-                    successors.add(new Node(node, state, level, cost));
-                }
-            }
-        }
-        return successors;
-    }
-
-    private static Optional<Node> findAlternative(List<Node> successors, Node best) {
-        List<Node> copy = new LinkedList<>(successors);
-        copy.remove(best);
-        return copy.stream()
-                .min(Comparator.comparing(Node::getCost));
-    }
-
-    private static Node findBest(List<Node> successors) {
+    private static Optional<Node> getAlternative(List<Node> successors, Node best) {
         return successors.stream()
-                .min(Comparator.comparing(Node::getCost))
+                .filter(successor -> !successor.equals(best))
+                .min(Comparator.comparing(Node::getF));
+    }
+
+    private static Node getBest(List<Node> successors) {
+        return successors.stream()
+                .min(Comparator.comparing(Node::getF))
                 .orElseThrow();
     }
 }

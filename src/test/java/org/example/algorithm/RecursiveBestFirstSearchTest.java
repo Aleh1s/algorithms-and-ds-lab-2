@@ -1,15 +1,16 @@
 package org.example.algorithm;
 
 import lombok.SneakyThrows;
-import org.example.node.Box3x3;
 import org.example.node.Node;
-import org.example.utils.Utils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Stack;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+@ExtendWith(MockitoExtension.class)
 class RecursiveBestFirstSearchTest {
 
     private final int[][] expected = {
@@ -26,11 +27,9 @@ class RecursiveBestFirstSearchTest {
                 {0, 4, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = RecursiveBestFirstSearch.search(problem, expected);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = RecursiveBestFirstSearch.search(problem, expected);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
 
     @Test
@@ -41,11 +40,9 @@ class RecursiveBestFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = RecursiveBestFirstSearch.search(problem, expected);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = RecursiveBestFirstSearch.search(problem, expected);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
 
     @Test
@@ -56,11 +53,9 @@ class RecursiveBestFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = RecursiveBestFirstSearch.search(problem, expected);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = RecursiveBestFirstSearch.search(problem, expected);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
 
     @Test
@@ -71,11 +66,9 @@ class RecursiveBestFirstSearchTest {
                 {1, 0, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = RecursiveBestFirstSearch.search(problem, expected);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = RecursiveBestFirstSearch.search(problem, expected);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
 
     @Test
@@ -86,10 +79,8 @@ class RecursiveBestFirstSearchTest {
                 {1, 5, 0},
                 {7, 8, 6}
         };
-        Stack<Node> search = RecursiveBestFirstSearch.search(problem, expected);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = RecursiveBestFirstSearch.search(problem, expected);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
 }

@@ -1,19 +1,22 @@
 package org.example.algorithm;
 
 import lombok.SneakyThrows;
-import org.example.exception.CutoffException;
-import org.example.node.Box3x3;
 import org.example.node.Node;
+import org.example.utils.Statistic;
 import org.example.utils.Utils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Stack;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class LimitDepthFirstSearchTest {
-
     private final int[][] expected = {
             {1, 2, 3},
             {4, 5, 6},
@@ -29,11 +32,9 @@ class LimitDepthFirstSearchTest {
                 {0, 4, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
     @Test
     @SneakyThrows
@@ -44,11 +45,9 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
     @Test
     @SneakyThrows
@@ -59,11 +58,9 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
     @Test
     @SneakyThrows
@@ -74,11 +71,9 @@ class LimitDepthFirstSearchTest {
                 {1, 0, 6},
                 {7, 5, 8}
         };
-        Stack<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
 
     @Test
@@ -90,11 +85,9 @@ class LimitDepthFirstSearchTest {
                 {1, 5, 0},
                 {7, 8, 6}
         };
-        Stack<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
-        Node peek = search.peek();
-        Box3x3 box = peek.getBox();
-        int[][] actual = Utils.from(box.getTiles());
-        assertArrayEquals(expected, actual);
+        Optional<Node> search = LimitDepthFirstSearch.search(problem, expected, limit);
+        Node node = search.orElseThrow();
+        assertArrayEquals(expected, node.getState());
     }
 
     @Test
@@ -105,7 +98,7 @@ class LimitDepthFirstSearchTest {
                 {0, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(CutoffException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit));
+        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit).orElseThrow());
     }
 
     @Test
@@ -116,7 +109,7 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(CutoffException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit));
+        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit).orElseThrow());
     }
 
     @Test
@@ -127,7 +120,7 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(CutoffException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit));
+        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit).orElseThrow());
     }
 
     @Test
@@ -138,7 +131,7 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 6},
                 {7, 5, 8}
         };
-        assertThrows(CutoffException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit));
+        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit).orElseThrow());
     }
 
     @Test
@@ -149,6 +142,6 @@ class LimitDepthFirstSearchTest {
                 {1, 4, 0},
                 {7, 5, 8}
         };
-        assertThrows(CutoffException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit));
+        assertThrows(NoSuchElementException.class, () -> LimitDepthFirstSearch.search(problem, expected, limit).orElseThrow());
     }
 }

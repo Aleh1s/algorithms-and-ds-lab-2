@@ -3,69 +3,55 @@ package org.example.node;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Objects;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.example.utils.Utils.*;
 
 @Getter
 @Setter
 public class Node {
-    private final Node parent;
-    private final Box3x3 box;
-    private final int level;
-    private int cost;
+    private int[][] state;
+    private int emptyX;
+    private int emptyY;
+    private int depth;
+    private int f;
+    private Direction dir;
+    private Node parent;
 
     public Node(
-            Node parent,
-            Box3x3 box,
-            int level
-    ) {
+            int[][] state,
+            int emptyX,
+            int emptyY,
+            int depth,
+            Direction dir,
+            Node parent) {
+        this.state = state;
+        this.emptyX = emptyX;
+        this.emptyY = emptyY;
+        this.depth = depth;
+        this.dir = dir;
         this.parent = parent;
-        this.box = box;
-        this.level = level;
     }
 
-    public Node(
-            Node parent,
-            Box3x3 box,
-            int level,
-            int cost
-    ) {
-        this.parent = parent;
-        this.box = box;
-        this.level = level;
-        this.cost = cost;
-    }
-
-    public static int calculateCost(Box3x3 curr, int[][] goal, int level) {
-        return curr.getNumOfDifferences(goal) + level;
-    }
-
-    public Box3x3 getSafeBox() {
-        try {
-            return box.clone();
-        } catch (CloneNotSupportedException e) {
-            System.err.println("(Can not clone Box3x3)");
-            System.exit(-1);
+    public List<Node> getSuccessors() {
+        List<Node> nextStates = new LinkedList<>();
+        for (Direction dir : Direction.values()) {
+            if (isSafe(dir, emptyX, emptyY)) {
+                int[][] state = cloneMatrix(getState());
+                swap(state, emptyX + dir.getX(), emptyY + dir.getY(), emptyX, emptyY);
+                nextStates.add(new Node(state, emptyX + dir.getX(), emptyY + dir.getY(), depth + 1, dir, this));
+            }
         }
-        return null;
+        return nextStates;
     }
 
-    public boolean isSolution(int[][] problem) {
-        return box.getNumOfDifferences(problem) == 0;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Node node)) return false;
-        return Objects.equals(box, node.box);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + (box != null ? box.hashCode() : 0);
-        result = 31 * result + level;
-        result = 31 * result + cost;
-        return result;
+    public int misplaced(int[][] goal) {
+        int counter = 0;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (state[i][j] != 0 && state[i][j] != goal[i][j])
+                    counter++;
+        return counter;
     }
 }
