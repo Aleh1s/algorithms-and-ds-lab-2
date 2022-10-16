@@ -2,18 +2,25 @@ package org.example.utils;
 
 import org.example.node.Direction;
 import org.example.node.Node;
+import org.example.property.Property;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
 
 public class Utils {
+
+    private static final int timeLimit;
+
+    static {
+        Properties properties = Property.getInstance().getProperties();
+        timeLimit = Integer.parseInt(properties.getProperty("time.minutes.limit"));
+    }
+
     public static boolean isSafe(Direction dir, int x, int y) {
         boolean xOutOfBound = x + dir.getX() < 0 || x + dir.getX() >= 3;
         boolean yOutOfBound = y + dir.getY() < 0 || y + dir.getY() >= 3;
@@ -104,5 +111,9 @@ public class Utils {
         return Arrays.stream(state)
                 .flatMapToInt(IntStream::of)
                 .toArray();
+    }
+
+    public static boolean timeOut(long start) {
+        return TimeUnit.NANOSECONDS.toMinutes(System.nanoTime() - start) > timeLimit;
     }
 }

@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static org.example.node.Indicator.*;
 import static org.example.utils.Utils.*;
 
 public class LimitDepthFirstSearch {
@@ -25,44 +26,49 @@ public class LimitDepthFirstSearch {
 
     public static Optional<Node> search(int[][] problem, int limit) {
         if (!isSolvable(problem))
-            return handleResult(Result.of(true, false, null));
+            return handleResult(Result.of(NOT_SOLVABLE, null));
         Point eptTile = getEmptyTileCoordinates(problem);
         return handleResult(
                 recursiveSearch(
-                        new Node(problem, eptTile.x, eptTile.y, 0, null, null), Parser.getGoalState(), limit));
+                        new Node(problem, eptTile.x, eptTile.y, 0, null, null), Parser.getGoalState(), limit, System.nanoTime()));
     }
 
     private static Optional<Node> handleResult(Result result) {
         Optional<Node> solution = result.getSolution();
-        if (result.isCutoff())
-            System.err.println("There is no solution on this depth level");
-        else if (result.isFailure())
-            System.err.println("Failure");
-        else
-            printSolution(solution.orElseThrow());
+        switch (result.getIndicator()) {
+            case CUTOFF -> System.out.println("There is no solution on this depth level");
+            case FAILURE -> System.out.println("Failure");
+            case NOT_SOLVABLE -> System.out.println("Not solvable");
+            case TERMINATED -> System.out.println("Terminated");
+            case SOLUTION -> printSolution(solution.orElseThrow());
+            default -> throw new IllegalArgumentException("Invalid indicator");
+        }
         return solution;
     }
 
-    private static Result recursiveSearch(Node node, int[][] goal, int limit) {
+    private static Result recursiveSearch(Node node, int[][] goal, int limit, long start) {
+        if (timeOut(start))
+            return Result.of(TERMINATED, null);
+
         boolean cutoffOccurred = false;
         if (node.isSolution(goal))
-            return Result.of(false, false, node);
+            return Result.of(SOLUTION, node);
 
         if (node.depthIsReached(limit))
-            return Result.of(false, true, null);
+            return Result.of(CUTOFF, null);
 
         for (Node successor : node.getSuccessors()) {
-            Result result = recursiveSearch(successor, goal, limit);
+            Result result = recursiveSearch(successor, goal, limit, start);
 
-            if (result.isCutoff())
+            if (result.cutoff())
                 cutoffOccurred = true;
-
-            else if (!result.isFailure())
+            else if (result.hasSolution() || result.isTerminated())
                 return result;
         }
+
         if (cutoffOccurred)
-            return Result.of(false, true, null);
+            return Result.of(CUTOFF, null);
         else
-            return Result.of(true, false, node);
+            return Result.of(FAILURE,  node);
     }
 }
