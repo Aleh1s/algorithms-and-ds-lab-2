@@ -9,7 +9,6 @@ import org.example.utils.Utils;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -42,28 +41,16 @@ public class RecursiveBestFirstSearch {
         System.out.println("~~~");
     }
 
-    public Optional<Node> search(int[][] problem) {
+    public Result search(int[][] problem) {
         if (notSolvable(problem))
-            return handleResult(Result.of(0, NOT_SOLVABLE, null));
+            return Result.of(0, NOT_SOLVABLE, null);
         Point eptTile = getEmptyTileCoordinates(problem);
         statistic.incrementNumberOfStates();
         statistic.incrementNumberOfSavedStates();
         Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), Integer.MAX_VALUE, System.nanoTime());
         if (!result.hasSolution())
             statistic.decrementNumberOfSavedStates();
-        return handleResult(result);
-    }
-
-    private Optional<Node> handleResult(Result result) {
-        Optional<Node> solution = result.getSolution();
-        switch (result.getIndicator()) {
-            case FAILURE -> System.out.println("Failure");
-            case NOT_SOLVABLE -> System.out.println("Not solvable");
-            case TERMINATED -> System.out.println("Terminated");
-            case SOLUTION -> printSolution(result.getSolution().orElseThrow());
-            default -> throw new IllegalArgumentException("Invalid indicator");
-        }
-        return solution;
+        return result;
     }
 
     private Result recursiveSearch(Node node, int fLimit, long start) {

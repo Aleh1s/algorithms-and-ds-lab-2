@@ -28,8 +28,8 @@ class RecursiveBestFirstSearchTest {
                 {7, 5, 8}
         };
         RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
-        Optional<Node> search = rbfs.search(problem);
-        Node node = search.orElseThrow();
+        Result result = rbfs.search(problem);
+        Node node = result.getSolution().orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
 
@@ -42,8 +42,8 @@ class RecursiveBestFirstSearchTest {
                 {7, 5, 8}
         };
         RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
-        Optional<Node> search = rbfs.search(problem);
-        Node node = search.orElseThrow();
+        Result result = rbfs.search(problem);
+        Node node = result.getSolution().orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
 
@@ -56,8 +56,8 @@ class RecursiveBestFirstSearchTest {
                 {7, 5, 8}
         };
         RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
-        Optional<Node> search = rbfs.search(problem);
-        Node node = search.orElseThrow();
+        Result result = rbfs.search(problem);
+        Node node = result.getSolution().orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
 
@@ -70,8 +70,8 @@ class RecursiveBestFirstSearchTest {
                 {7, 5, 8}
         };
         RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
-        Optional<Node> search = rbfs.search(problem);
-        Node node = search.orElseThrow();
+        Result result = rbfs.search(problem);
+        Node node = result.getSolution().orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
 
@@ -84,8 +84,8 @@ class RecursiveBestFirstSearchTest {
                 {7, 8, 6}
         };
         RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
-        Optional<Node> search = rbfs.search(problem);
-        Node node = search.orElseThrow();
+        Result result = rbfs.search(problem);
+        Node node = result.getSolution().orElseThrow();
         assertArrayEquals(expected, node.getState());
     }
 }

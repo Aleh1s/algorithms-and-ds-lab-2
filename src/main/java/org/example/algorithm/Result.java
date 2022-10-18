@@ -14,7 +14,7 @@ import static org.example.node.Indicator.*;
 @Getter
 @Setter
 @AllArgsConstructor(access = PRIVATE)
-class Result {
+public class Result {
     private int fBest;
     private Indicator indicator;
     private Optional<Node> solution;

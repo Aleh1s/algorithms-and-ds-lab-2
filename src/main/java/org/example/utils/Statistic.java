@@ -1,20 +1,47 @@
 package org.example.utils;
 
+import org.example.algorithm.LimitDepthFirstSearch;
+import org.example.algorithm.Result;
+
 import java.util.List;
+
+import static org.example.utils.Utils.*;
 
 public class Statistic {
     private long numberOfIterations;
     private long numberOfStates;
     private long numberOfSavedStates;
     private boolean foundAnOptimalSolution;
+    private static final int NUMBER_OF_EXPERIMENTS = 20;
 
     {
         foundAnOptimalSolution = true;
     }
 
-    public void increaseNumberOfStates(int number) {numberOfStates += number;}
-    public void increaseNumberOfSavedStates(int number) {numberOfSavedStates += number;}
-    public void reduceNumberOfSavedStates(int number) {numberOfSavedStates -= number;}
+    public static void main(String[] args) {
+        for (int i = 0; i < NUMBER_OF_EXPERIMENTS; i++) {
+            System.out.printf("Experiment number %d%n", i + 1);
+            int[][] problem = generateProblem();
+            LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
+            Result result = ldfs.search(problem, 40);
+            handleResult(result);
+            printStatistic(ldfs.getStatistic());
+            System.out.println("~~~");
+        }
+    }
+
+    public void increaseNumberOfStates(int number) {
+        numberOfStates += number;
+    }
+
+    public void increaseNumberOfSavedStates(int number) {
+        numberOfSavedStates += number;
+    }
+
+    public void reduceNumberOfSavedStates(int number) {
+        numberOfSavedStates -= number;
+    }
+
     public void incrementNumberOfIteration() {
         numberOfIterations++;
     }
@@ -30,7 +57,6 @@ public class Statistic {
     public void decrementNumberOfSavedStates() {
         numberOfSavedStates--;
     }
-
 
     public long getNumberOfIterations() {
         return numberOfIterations;

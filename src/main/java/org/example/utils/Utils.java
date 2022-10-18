@@ -1,5 +1,6 @@
 package org.example.utils;
 
+import org.example.algorithm.Result;
 import org.example.node.Direction;
 import org.example.node.Node;
 import org.example.property.Property;
@@ -121,5 +122,17 @@ public class Utils {
 
     public static boolean timeOut(long start) {
         return TimeUnit.NANOSECONDS.toMinutes(System.nanoTime() - start) > timeLimit;
+    }
+
+    public static void handleResult(Result result) {
+        Optional<Node> solution = result.getSolution();
+        switch (result.getIndicator()) {
+            case CUTOFF -> System.out.println("There is no solution on this depth level");
+            case FAILURE -> System.out.println("Failure");
+            case NOT_SOLVABLE -> System.out.println("Not solvable");
+            case TERMINATED -> System.out.println("Terminated");
+            case SOLUTION -> printSolution(solution.orElseThrow());
+            default -> throw new IllegalArgumentException("Invalid indicator");
+        }
     }
 }

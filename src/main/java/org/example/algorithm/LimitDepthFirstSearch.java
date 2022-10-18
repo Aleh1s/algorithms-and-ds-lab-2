@@ -31,36 +31,22 @@ public class LimitDepthFirstSearch {
         int[][] problem = generateProblem();
         LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
         long start = System.nanoTime();
-        ldfs.search(problem, 20);
+        ldfs.search(problem, 25);
         long finish = System.nanoTime();
         System.out.println(TimeUnit.NANOSECONDS.toMillis(finish - start));
         printStatistic(ldfs.getStatistic());
-        System.out.println("~~~");
     }
 
-    public Optional<Node> search(int[][] problem, int limit) {
+    public Result search(int[][] problem, int limit) {
         if (notSolvable(problem))
-            return handleResult(Result.of(NOT_SOLVABLE, null));
+            return Result.of(NOT_SOLVABLE, null);
         Point eptTile = getEmptyTileCoordinates(problem);
         statistic.incrementNumberOfStates();
         statistic.incrementNumberOfSavedStates();
         Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), limit, System.nanoTime());
         if (!result.hasSolution())
             statistic.decrementNumberOfSavedStates();
-        return handleResult(result);
-    }
-
-    private Optional<Node> handleResult(Result result) {
-        Optional<Node> solution = result.getSolution();
-        switch (result.getIndicator()) {
-            case CUTOFF -> System.out.println("There is no solution on this depth level");
-            case FAILURE -> System.out.println("Failure");
-            case NOT_SOLVABLE -> System.out.println("Not solvable");
-            case TERMINATED -> System.out.println("Terminated");
-            case SOLUTION -> printSolution(solution.orElseThrow());
-            default -> throw new IllegalArgumentException("Invalid indicator");
-        }
-        return solution;
+        return result;
     }
 
     private Result recursiveSearch(Node node, int limit, long start) {
