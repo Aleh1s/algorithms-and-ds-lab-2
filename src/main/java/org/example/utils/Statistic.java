@@ -1,6 +1,7 @@
 package org.example.utils;
 
 import org.example.algorithm.LimitDepthFirstSearch;
+import org.example.algorithm.RecursiveBestFirstSearch;
 import org.example.algorithm.Result;
 
 import java.util.List;
@@ -19,13 +20,25 @@ public class Statistic {
     }
 
     public static void main(String[] args) {
+        System.out.println("LDFS:");
         for (int i = 0; i < NUMBER_OF_EXPERIMENTS; i++) {
             System.out.printf("Experiment number %d%n", i + 1);
             int[][] problem = generateProblem();
             LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
-            Result result = ldfs.search(problem, 40);
+            Result result = ldfs.search(problem, 25);
             handleResult(result);
             printStatistic(ldfs.getStatistic());
+            System.out.println("~~~");
+        }
+
+        System.out.println("RBFS:");
+        for (int i = 0; i < NUMBER_OF_EXPERIMENTS; i++) {
+            System.out.printf("Experiment number %d%n", i + 1);
+            int[][] problem = generateProblem();
+            RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
+            Result result = rbfs.search(problem);
+            handleResult(result);
+            printStatistic(rbfs.getStatistic());
             System.out.println("~~~");
         }
     }
