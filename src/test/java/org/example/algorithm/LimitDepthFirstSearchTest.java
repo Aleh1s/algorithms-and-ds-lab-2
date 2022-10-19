@@ -24,7 +24,7 @@ class LimitDepthFirstSearchTest {
     @Test
     @SneakyThrows
     void solutionIsReached1() {
-        int limit = 15;
+        int limit = 3;
         int[][] problem = {
                 {1, 2, 3},
                 {0, 4, 6},

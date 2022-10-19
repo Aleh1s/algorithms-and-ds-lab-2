@@ -65,5 +65,21 @@ public class Node {
         return depth >= limit;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Node node)) return false;
 
+        if (emptyX != node.emptyX) return false;
+        if (emptyY != node.emptyY) return false;
+        return Arrays.deepEquals(state, node.state);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.deepHashCode(state);
+        result = 31 * result + emptyX;
+        result = 31 * result + emptyY;
+        return result;
+    }
 }

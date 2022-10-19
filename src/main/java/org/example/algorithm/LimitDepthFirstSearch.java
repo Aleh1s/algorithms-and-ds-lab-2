@@ -7,7 +7,6 @@ import org.example.utils.Statistic;
 
 import java.awt.*;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.example.node.Indicator.*;
 import static org.example.utils.Utils.*;
@@ -28,64 +27,58 @@ public class LimitDepthFirstSearch {
 
     public static void main(String[] args) {
         int[][] problem = generateProblem();
-        LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
-        long start = System.nanoTime();
-        Result search = ldfs.search(problem, 20);
-        long finish = System.nanoTime();
-        handleResult(search);
-        System.out.println(TimeUnit.NANOSECONDS.toMillis(finish - start));
-        printStatistic(ldfs.getStatistic());
+        printExecutionTimeOf(() -> {
+            var ldfs = new LimitDepthFirstSearch();
+            handleResult(ldfs.search(problem, 25));
+            ldfs.getStatistic().printStatistic();
+        });
     }
 
     public Result search(int[][] problem, int limit) {
         if (notSolvable(problem))
             return Result.of(NOT_SOLVABLE, null);
+
         Point eptTile = getEmptyTileCoordinates(problem);
-        statistic.incrementNumberOfStates();
-        statistic.incrementNumberOfSavedStates();
-        Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), limit, System.nanoTime());
-        if (!result.hasSolution())
-            statistic.decrementNumberOfSavedStates();
+        Node root = new Node(problem, eptTile.x, eptTile.y, 0, null, null);
+        statistic.addUniqueState(root);
+        Result result = recursiveSearch(root, limit, System.nanoTime());
+        statistic.addUniqueStateInMemory(root);
+
+        if (result.isTerminated())
+            statistic.setAlgorithmTerminated(true);
+
         return result;
     }
 
     private Result recursiveSearch(Node node, int limit, long start) {
         statistic.incrementNumberOfIteration();
-        if (timeOut(start) || memoryLimitIsReached()) {
+        if (timeOut(start) || memoryLimitIsReached())
             return Result.of(TERMINATED, null);
-        }
 
         boolean cutoffOccurred = false;
-        if (node.isSolution(goal)) {
+        if (node.isSolution(goal))
             return Result.of(SOLUTION, node);
-        }
 
-        if (node.depthIsReached(limit)) {
+        if (node.depthIsReached(limit))
             return Result.of(CUTOFF, null);
-        }
 
         List<Node> successors = node.getSuccessors();
-        statistic.increaseNumberOfStates(successors.size());
-        statistic.increaseNumberOfSavedStates(successors.size());
+        statistic.addUniqueStates(successors);
 
         for (Node successor : successors) {
             Result result = recursiveSearch(successor, limit, start);
 
             if (result.cutoff())
                 cutoffOccurred = true;
-            else if (result.hasSolution())
-                return result;
-            else if (result.isTerminated()) {
-                statistic.reduceNumberOfSavedStates(successors.size());
+            else if (result.hasSolution() || result.isTerminated()) {
+                statistic.addUniqueStatesInMemory(successors);
                 return result;
             }
         }
 
-        statistic.reduceNumberOfSavedStates(successors.size());
-        if (cutoffOccurred) {
+        if (cutoffOccurred)
             return Result.of(CUTOFF, null);
-        } else {
+        else
             return Result.of(FAILURE, null);
-        }
     }
 }

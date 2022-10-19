@@ -6,7 +6,6 @@ import org.example.node.Node;
 import org.example.property.Property;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
@@ -21,6 +20,12 @@ public class Utils {
     static {
         Properties properties = Property.getInstance().getProperties();
         timeLimit = Integer.parseInt(properties.getProperty("time.minutes.limit"));
+    }
+
+    public static void printExecutionTimeOf(Runnable action) {
+        long start = System.nanoTime();
+        action.run();
+        System.out.printf("%d ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
     }
 
     public static boolean isSafe(Direction dir, int x, int y) {
@@ -99,20 +104,6 @@ public class Utils {
             }
             System.out.println();
         }
-    }
-
-    public static void printStatistics(List<Statistic> statistics) {
-        System.out.println("The whole statistic: ");
-        System.out.printf("Average number of iteration - %.2f%n", Statistic.countAverageNumberOfIteration(statistics));
-        System.out.printf("Average number of states - %.2f%n", Statistic.countAverageNumberOfStates(statistics));
-        System.out.printf("Average number of saved states - %.2f%n", Statistic.countAverageNumberOfSavedSates(statistics));
-        System.out.println("Number of times when solution is not optimal - " + Statistic.countNumberOfTimesWhenSolutionIsNotOptimal(statistics));
-    }
-
-    public static void printStatistic(Statistic statistic) {
-        System.out.printf("Number of iterations - %d%n", statistic.getNumberOfIterations());
-        System.out.printf("Number of states - %d%n", statistic.getNumberOfStates());
-        System.out.printf("Number of saved states - %d%n", statistic.getNumberOfSavedStates());
     }
 
     public static int[] from(int[][] state) {
