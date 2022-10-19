@@ -21,24 +21,43 @@ public class Statistic {
 
     public static void main(String[] args) {
         System.out.println("LDFS:");
-        for (int i = 0; i < NUMBER_OF_EXPERIMENTS; i++) {
+        int n1 = 0;
+        for (int i = 0; i < NUMBER_OF_EXPERIMENTS + n1; i++) {
             System.out.printf("Experiment number %d%n", i + 1);
             int[][] problem = generateProblem();
+            printInitialState(problem);
             LimitDepthFirstSearch ldfs = new LimitDepthFirstSearch();
-            Result result = ldfs.search(problem, 25);
-            handleResult(result);
-            printStatistic(ldfs.getStatistic());
+            Result search = ldfs.search(problem, 40);
+            if (search.isTerminated()) {
+                System.out.println("Terminated");
+                printStatistic(ldfs.getStatistic());
+            } else if (search.hasSolution()) {
+                System.out.println("Has solution");
+                printStatistic(ldfs.getStatistic());
+            } else {
+                System.out.println(search.getIndicator().name());
+                n1++;
+            }
             System.out.println("~~~");
         }
-
         System.out.println("RBFS:");
-        for (int i = 0; i < NUMBER_OF_EXPERIMENTS; i++) {
+        int n2 = 0;
+        for (int i = 0; i < NUMBER_OF_EXPERIMENTS + n2; i++) {
             System.out.printf("Experiment number %d%n", i + 1);
             int[][] problem = generateProblem();
+            printInitialState(problem);
             RecursiveBestFirstSearch rbfs = new RecursiveBestFirstSearch();
-            Result result = rbfs.search(problem);
-            handleResult(result);
-            printStatistic(rbfs.getStatistic());
+            Result search = rbfs.search(problem);
+            if (search.isTerminated()) {
+                System.out.println("Terminated");
+                printStatistic(rbfs.getStatistic());
+            } else if (search.hasSolution()) {
+                System.out.println("Has solution");
+                printStatistic(rbfs.getStatistic());
+            } else {
+                System.out.println(search.getIndicator().name());
+                n2++;
+            }
             System.out.println("~~~");
         }
     }

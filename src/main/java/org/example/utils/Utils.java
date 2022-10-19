@@ -16,6 +16,7 @@ import static java.util.Objects.nonNull;
 public class Utils {
 
     private static final int timeLimit;
+    public static final int ONE_GB_IN_BYTES = 1024 * 1024 * 1024;
 
     static {
         Properties properties = Property.getInstance().getProperties();
@@ -134,5 +135,9 @@ public class Utils {
             case SOLUTION -> printSolution(solution.orElseThrow());
             default -> throw new IllegalArgumentException("Invalid indicator");
         }
+    }
+
+    public static boolean memoryLimitIsReached(int memoryUsed) {
+        return memoryUsed >= ONE_GB_IN_BYTES;
     }
 }

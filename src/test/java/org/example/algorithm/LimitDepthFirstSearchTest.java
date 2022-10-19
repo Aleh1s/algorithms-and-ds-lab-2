@@ -2,6 +2,7 @@ package org.example.algorithm;
 
 import lombok.SneakyThrows;
 import org.example.node.Node;
+import org.example.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,7 +24,7 @@ class LimitDepthFirstSearchTest {
     @Test
     @SneakyThrows
     void solutionIsReached1() {
-        int limit = 3;
+        int limit = 15;
         int[][] problem = {
                 {1, 2, 3},
                 {0, 4, 6},

@@ -19,6 +19,7 @@ public class Node {
     private int f;
     private Direction dir;
     private Node parent;
+    public static final int BYTES = 36 + 4 + 4 + 4 + 4 + 32;
 
     public Node(
             int[][] state,
@@ -63,4 +64,6 @@ public class Node {
     public boolean depthIsReached(int limit) {
         return depth >= limit;
     }
+
+
 }
