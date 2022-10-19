@@ -65,7 +65,7 @@ public class Statistic {
         System.out.printf("Number of iterations - %d%n", numberOfIterations);
         System.out.printf("Number of unique states - %d%n", uniqueStates.size());
         System.out.printf("Number of unique states in memory - %d%n", uniqueStatesInMemory.size());
-        System.out.printf("Algorithm is %s TERMINATED%n", isAlgorithmTerminated ? "" : "not");
+        System.out.printf("Algorithm is %sTERMINATED%n", isAlgorithmTerminated ? "" : "not ");
     }
 
     public static void testRecursiveBestFirstSearch() {
@@ -94,7 +94,7 @@ public class Statistic {
             var problem = generateProblem();
             printInitialState(problem);
             var ldfs = new LimitDepthFirstSearch();
-            var result = ldfs.search(problem, 30);
+            var result = ldfs.search(problem, 40);
             var statistic = ldfs.getStatistic();
             if (!result.hasSolution() && !result.isTerminated())
                 n++;

@@ -40,6 +40,7 @@ public class LimitDepthFirstSearch {
 
         Point eptTile = getEmptyTileCoordinates(problem);
         Node root = new Node(problem, eptTile.x, eptTile.y, 0, null, null);
+
         statistic.addUniqueState(root);
         Result result = recursiveSearch(root, limit, System.nanoTime());
         statistic.addUniqueStateInMemory(root);
