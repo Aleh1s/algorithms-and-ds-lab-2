@@ -15,7 +15,6 @@ import static org.example.utils.Utils.*;
 @Getter
 public class LimitDepthFirstSearch {
 
-    private int memoryUsed;
     private final Statistic statistic;
     private static final int[][] goal;
 
@@ -39,13 +38,11 @@ public class LimitDepthFirstSearch {
     }
 
     public Result search(int[][] problem, int limit) {
-        memoryUsed = 0;
         if (notSolvable(problem))
             return Result.of(NOT_SOLVABLE, null);
         Point eptTile = getEmptyTileCoordinates(problem);
         statistic.incrementNumberOfStates();
         statistic.incrementNumberOfSavedStates();
-        memoryUsed += Integer.BYTES + Node.BYTES;
         Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), limit, System.nanoTime());
         if (!result.hasSolution())
             statistic.decrementNumberOfSavedStates();
@@ -53,9 +50,8 @@ public class LimitDepthFirstSearch {
     }
 
     private Result recursiveSearch(Node node, int limit, long start) {
-        memoryUsed += Integer.BYTES;
         statistic.incrementNumberOfIteration();
-        if (timeOut(start) || memoryLimitIsReached(memoryUsed)) {
+        if (timeOut(start) || memoryLimitIsReached()) {
             return Result.of(TERMINATED, null);
         }
 
@@ -71,8 +67,6 @@ public class LimitDepthFirstSearch {
         List<Node> successors = node.getSuccessors();
         statistic.increaseNumberOfStates(successors.size());
         statistic.increaseNumberOfSavedStates(successors.size());
-        memoryUsed += successors.size() * Node.BYTES;
-        System.out.println("Increment");
 
         for (Node successor : successors) {
             Result result = recursiveSearch(successor, limit, start);
@@ -89,8 +83,6 @@ public class LimitDepthFirstSearch {
 
         statistic.reduceNumberOfSavedStates(successors.size());
         if (cutoffOccurred) {
-            System.out.println("Reduce");
-            memoryUsed -= (Integer.BYTES + successors.size() * Node.BYTES);
             return Result.of(CUTOFF, null);
         } else {
             return Result.of(FAILURE, null);

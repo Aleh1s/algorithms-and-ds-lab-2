@@ -137,7 +137,9 @@ public class Utils {
         }
     }
 
-    public static boolean memoryLimitIsReached(int memoryUsed) {
-        return memoryUsed >= ONE_GB_IN_BYTES;
+    public static boolean memoryLimitIsReached() {
+        Runtime runtime = Runtime.getRuntime();
+        long usedBytes = (runtime.totalMemory() - runtime.freeMemory());
+        return usedBytes >= ONE_GB_IN_BYTES;
     }
 }

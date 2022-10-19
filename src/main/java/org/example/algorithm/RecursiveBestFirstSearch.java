@@ -18,8 +18,6 @@ import static org.example.utils.Utils.*;
 
 @Getter
 public class RecursiveBestFirstSearch {
-
-    private int memoryUsed;
     private final Statistic statistic;
     private static final int[][] goal;
 
@@ -44,13 +42,11 @@ public class RecursiveBestFirstSearch {
     }
 
     public Result search(int[][] problem) {
-        memoryUsed = 0;
         if (notSolvable(problem))
             return Result.of(0, NOT_SOLVABLE, null);
         Point eptTile = getEmptyTileCoordinates(problem);
         statistic.incrementNumberOfStates();
         statistic.incrementNumberOfSavedStates();
-        memoryUsed += Node.BYTES;
         Result result = recursiveSearch(new Node(problem, eptTile.x, eptTile.y, 0, null, null), Integer.MAX_VALUE, System.nanoTime());
         if (!result.hasSolution())
             statistic.decrementNumberOfSavedStates();
@@ -58,9 +54,8 @@ public class RecursiveBestFirstSearch {
     }
 
     private Result recursiveSearch(Node node, int fLimit, long start) {
-        memoryUsed += Integer.BYTES;
         statistic.incrementNumberOfIteration();
-        if (timeOut(start) || memoryLimitIsReached(memoryUsed))
+        if (timeOut(start) || memoryLimitIsReached())
             return Result.of(Integer.MAX_VALUE, TERMINATED, null);
 
         if (node.isSolution(goal))
@@ -69,7 +64,6 @@ public class RecursiveBestFirstSearch {
         List<Node> successors = node.getSuccessors();
         statistic.increaseNumberOfStates(successors.size());
         statistic.increaseNumberOfSavedStates(successors.size());
-        memoryUsed += successors.size() * Node.BYTES;
 
 
         if (successors.isEmpty())
@@ -84,7 +78,6 @@ public class RecursiveBestFirstSearch {
             Node best = successors.get(0);
             if (best.getF() > fLimit) {
                 statistic.reduceNumberOfSavedStates(successors.size());
-                memoryUsed -= Integer.BYTES + successors.size() * Node.BYTES;
                 return Result.of(best.getF(), FAILURE, null);
             }
 
